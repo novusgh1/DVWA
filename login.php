@@ -41,10 +41,20 @@ if( isset( $_POST[ 'Login' ] ) ) {
 	if( $result && mysqli_num_rows( $result ) == 1 ) {    // Login Successful...
 		dvwaMessagePush( "You have logged in as '{$user}'" );
 		dvwaLogin( $user );
+		pendoTrackEvent( 'login_attempted', $user, array(
+			'username' => $user,
+			'outcome' => 'success',
+			'is_first_setup' => false,
+		));
 		dvwaRedirect( DVWA_WEB_PAGE_TO_ROOT . 'index.php' );
 	}
 
 	// Login failed
+	pendoTrackEvent( 'login_attempted', $user, array(
+		'username' => $user,
+		'outcome' => 'failure',
+		'is_first_setup' => false,
+	));
 	dvwaMessagePush( 'Login failed' );
 	dvwaRedirect( 'login.php' );
 }

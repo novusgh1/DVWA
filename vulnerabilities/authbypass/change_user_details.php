@@ -47,6 +47,14 @@ try {
 $query = "UPDATE users SET first_name = '" . $data->first_name . "', last_name = '" .  $data->surname . "' where user_id = " . $data->id . "";
 $result = mysqli_query($GLOBALS["___mysqli_ston"],  $query ) or die( '<pre>' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );
 
+pendoTrackEvent( 'user_details_updated_via_bypass', dvwaCurrentUser(), array(
+	'security_level' => dvwaSecurityLevelGet(),
+	'target_user_id' => $data->id,
+	'current_user' => dvwaCurrentUser(),
+	'is_admin' => ( dvwaCurrentUser() === 'admin' ),
+	'outcome' => 'success',
+));
+
 print json_encode (array ("result" => "ok"));
 exit;
 ?>

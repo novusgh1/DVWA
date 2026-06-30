@@ -37,11 +37,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$phrase = $_POST['phrase'];
 		$token = $_POST['token'];
 
+		$js_phrase_correct = ( $phrase == "success" );
+		$js_token_valid = false;
+		$js_challenge_solved = false;
+
 		if ($phrase == "success") {
 			switch( dvwaSecurityLevelGet() ) {
 				case 'low':
 					if ($token == md5(str_rot13("success"))) {
 						$message = "<p style='color:red'>Well done!</p>";
+						$js_token_valid = true;
+						$js_challenge_solved = true;
 					} else {
 						$message = "<p>Invalid token.</p>";
 					}
@@ -49,6 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 				case 'medium':
 					if ($token == strrev("XXsuccessXX")) {
 						$message = "<p style='color:red'>Well done!</p>";
+						$js_token_valid = true;
+						$js_challenge_solved = true;
 					} else {
 						$message = "<p>Invalid token.</p>";
 					}
@@ -56,6 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 				case 'high':
 					if ($token == hash("sha256", hash("sha256", "XX" . strrev("success")) . "ZZ")) {
 						$message = "<p style='color:red'>Well done!</p>";
+						$js_token_valid = true;
+						$js_challenge_solved = true;
 					} else {
 						$message = "<p>Invalid token.</p>";
 					}
@@ -67,6 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		} else {
 			$message = "<p>You got the phrase wrong.</p>";
 		}
+
+		pendoTrackEvent( 'javascript_attack_submitted', dvwaCurrentUser(), array(
+			'security_level' => dvwaSecurityLevelGet(),
+			'phrase_correct' => $js_phrase_correct,
+			'token_valid' => $js_token_valid,
+			'challenge_solved' => $js_challenge_solved,
+		));
 	} else {
 		$message = "<p>Missing phrase or token.</p>";
 	}

@@ -17,10 +17,22 @@ if( isset( $_GET[ 'Change' ] ) ) {
 		$result = mysqli_query($GLOBALS["___mysqli_ston"],  $insert ) or die( '<pre>' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );
 
 		// Feedback for the user
+		pendoTrackEvent( 'csrf_password_change_submitted', $current_user, array(
+			'security_level' => dvwaSecurityLevelGet(),
+			'passwords_matched' => true,
+			'outcome' => 'changed',
+			'current_user' => $current_user,
+		));
 		$html .= "<pre>Password Changed.</pre>";
 	}
 	else {
 		// Issue with passwords matching
+		pendoTrackEvent( 'csrf_password_change_submitted', dvwaCurrentUser(), array(
+			'security_level' => dvwaSecurityLevelGet(),
+			'passwords_matched' => false,
+			'outcome' => 'mismatch',
+			'current_user' => dvwaCurrentUser(),
+		));
 		$html .= "<pre>Passwords did not match.</pre>";
 	}
 

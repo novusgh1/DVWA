@@ -27,22 +27,33 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	try {
 		if (array_key_exists ('message', $_POST)) {
 			$message = $_POST['message'];
-			if (array_key_exists ('direction', $_POST) && $_POST['direction'] == "decode") {
+			$crypto_direction = ( array_key_exists ('direction', $_POST) && $_POST['direction'] == "decode" ) ? 'decode' : 'encode';
+			if ($crypto_direction == "decode") {
 				$encoded = xor_this (base64_decode ($message), $key);
 				$encode_radio_selected = " ";
 				$decode_radio_selected = " checked='checked' ";
 			} else {
 				$encoded = base64_encode(xor_this ($message, $key));
 			}
+			pendoTrackEvent( 'cryptography_message_processed', dvwaCurrentUser(), array(
+				'security_level' => dvwaSecurityLevelGet(),
+				'direction' => $crypto_direction,
+				'message_length' => strlen( $message ),
+			));
 		}
 		if (array_key_exists ('password', $_POST)) {
 			$password = $_POST['password'];
 			$decoded = xor_this (base64_decode ($password), $key);
+			$crypto_login_outcome = ( $password == "Olifant" ) ? 'success' : 'failure';
 			if ($password == "Olifant") {
 				$success = "Welcome back user";
 			} else {
 				$errors = "Login Failed";
 			}
+			pendoTrackEvent( 'cryptography_login_attempted', dvwaCurrentUser(), array(
+				'security_level' => dvwaSecurityLevelGet(),
+				'login_outcome' => $crypto_login_outcome,
+			));
 		}
 	} catch(Exception $e) {
 		$errors = $e->getMessage();

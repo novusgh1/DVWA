@@ -12,6 +12,9 @@ if (!file_exists(DVWA_WEB_PAGE_TO_ROOT . 'config/config.inc.php')) {
 // Include configs
 require_once DVWA_WEB_PAGE_TO_ROOT . 'config/config.inc.php';
 
+// Include Pendo tracking helper
+require_once dirname( __FILE__ ) . '/dvwaPendoTrack.inc.php';
+
 // Declare the $html variable
 if( !isset( $html ) ) {
 	$html = "";

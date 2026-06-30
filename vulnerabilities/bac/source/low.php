@@ -54,6 +54,21 @@ if (isset($_GET['action']) && isset($_GET['user_id'])) {
             }
         }
         
+        // Determine if access was granted
+        $bac_access_granted = false;
+        if ($user_exists && isset($_COOKIE['user_id'])) {
+            $bac_access_granted = ( $id == intval($_COOKIE['user_id']) );
+        }
+
+        pendoTrackEvent( 'broken_access_control_profile_accessed', dvwaCurrentUser(), array(
+            'security_level' => dvwaSecurityLevelGet(),
+            'target_user_id' => $id,
+            'current_user_id' => $current_user_id,
+            'current_user_role' => $role,
+            'access_granted' => $bac_access_granted,
+            'user_exists' => $user_exists,
+        ));
+
         // Log access attempts
         try {
             // First check if the bac_log table exists

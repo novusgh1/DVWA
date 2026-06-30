@@ -152,6 +152,12 @@ dvwaMessagePush( "Added account_enabled columns to users table." );
 // Done
 dvwaMessagePush( "<em>Setup successful</em>!" );
 
+pendoTrackEvent( 'database_reset_completed', dvwaIsLoggedIn() ? dvwaCurrentUser() : 'anonymous', array(
+	'database_type' => 'MySQL',
+	'is_logged_in' => dvwaIsLoggedIn(),
+	'tables_created_count' => 5,
+));
+
 if( !dvwaIsLoggedIn())
     dvwaMessagePush( "Please <a href='login.php'>login</a>.<script>setTimeout(function(){window.location.href='login.php'},5000);</script>" );
 dvwaPageReload();
