@@ -11,6 +11,7 @@ if (!file_exists(DVWA_WEB_PAGE_TO_ROOT . 'config/config.inc.php')) {
 
 // Include configs
 require_once DVWA_WEB_PAGE_TO_ROOT . 'config/config.inc.php';
+require_once DVWA_WEB_PAGE_TO_ROOT . 'dvwa/includes/dvwaPendoInit.inc.php';
 
 // Declare the $html variable
 if( !isset( $html ) ) {
@@ -386,6 +387,8 @@ function dvwaHtmlEcho( $pPage ) {
 	Header( 'Content-Type: text/html;charset=utf-8' );     // TODO- proper XHTML headers...
 	Header( 'Expires: Tue, 23 Jun 2009 12:00:00 GMT' );    // Date in the past
 
+	$pendoSnippet = dvwaPendoSnippet();
+
 	echo "<!DOCTYPE html>
 
 <html lang=\"en-GB\">
@@ -400,6 +403,8 @@ function dvwaHtmlEcho( $pPage ) {
 		<link rel=\"icon\" type=\"\image/ico\" href=\"" . DVWA_WEB_PAGE_TO_ROOT . "favicon.ico\" />
 
 		<script type=\"text/javascript\" src=\"" . DVWA_WEB_PAGE_TO_ROOT . "dvwa/js/dvwaPage.js\"></script>
+
+		{$pendoSnippet}
 
 	</head>
 
