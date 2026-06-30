@@ -28,10 +28,10 @@ services:
   db:
     image: docker.io/library/mariadb:10
     environment:
-      - MYSQL_ROOT_PASSWORD=dvwa
+      - MYSQL_ROOT_PASSWORD=DVWA
       - MYSQL_DATABASE=dvwa
       - MYSQL_USER=dvwa
-      - MYSQL_PASSWORD=p@ssw0rd
+      - MYSQL_PASSWORD=DVWA
     volumes:
       - dvwa:/var/lib/mysql
     networks:
