@@ -5,6 +5,13 @@ if( isset( $_POST[ 'btnSign' ] ) ) {
 	$message = trim( $_POST[ 'mtxMessage' ] );
 	$name    = trim( $_POST[ 'txtName' ] );
 
+	pendoTrackEvent( 'guestbook_entry_signed', dvwaCurrentUser(), array(
+		'security_level' => dvwaSecurityLevelGet(),
+		'message_length' => strlen( $message ),
+		'name_length' => strlen( $name ),
+		'contains_script_tags' => (bool) preg_match( '/<script/i', $message . $name ),
+	));
+
 	// Sanitize message input
 	$message = stripslashes( $message );
 	$message = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $message ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));

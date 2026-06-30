@@ -41,6 +41,14 @@ if( isset( $_GET[ 'Submit' ] ) ) {
 			break;
 	}
 
+	pendoTrackEvent( 'blind_sql_injection_query_submitted', dvwaCurrentUser(), array(
+		'security_level' => dvwaSecurityLevelGet(),
+		'input_length' => strlen( $id ),
+		'user_exists_result' => $exists,
+		'database_backend' => $_DVWA['SQLI_DB'],
+		'http_method' => $_SERVER['REQUEST_METHOD'],
+	));
+
 	if ($exists) {
 		// Feedback for end user
 		$html .= '<pre>User ID exists in the database.</pre>';

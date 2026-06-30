@@ -30,7 +30,13 @@ if( isset( $_POST['seclev_submit'] ) ) {
 			break;
 	}
 
+	$previousSecurityLevel = dvwaSecurityLevelGet();
 	dvwaSecurityLevelSet( $securityLevel );
+	pendoTrackEvent( 'security_level_changed', dvwaCurrentUser(), array(
+		'security_level' => $securityLevel,
+		'previous_security_level' => $previousSecurityLevel,
+		'username' => dvwaCurrentUser(),
+	));
 	dvwaMessagePush( "Security level set to {$securityLevel}" );
 	dvwa_start_session();
 	dvwaPageReload();

@@ -18,11 +18,23 @@ if( isset( $_GET[ 'Login' ] ) ) {
 		$avatar = $row["avatar"];
 
 		// Login successful
+		pendoTrackEvent( 'brute_force_login_attempted', dvwaCurrentUser(), array(
+			'security_level' => dvwaSecurityLevelGet(),
+			'outcome' => 'success',
+			'username_provided' => $user,
+			'http_method' => 'GET',
+		));
 		$html .= "<p>Welcome to the password protected area {$user}</p>";
 		$html .= "<img src=\"{$avatar}\" />";
 	}
 	else {
 		// Login failed
+		pendoTrackEvent( 'brute_force_login_attempted', dvwaCurrentUser(), array(
+			'security_level' => dvwaSecurityLevelGet(),
+			'outcome' => 'failure',
+			'username_provided' => $user,
+			'http_method' => 'GET',
+		));
 		$html .= "<pre><br />Username and/or password incorrect.</pre>";
 	}
 

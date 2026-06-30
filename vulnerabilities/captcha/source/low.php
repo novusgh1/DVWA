@@ -17,6 +17,13 @@ if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '1' ) ) {
 	// Did the CAPTCHA fail?
 	if( !$resp ) {
 		// What happens when the CAPTCHA was entered incorrectly
+		pendoTrackEvent( 'captcha_password_change_submitted', dvwaCurrentUser(), array(
+			'security_level' => dvwaSecurityLevelGet(),
+			'step' => 1,
+			'captcha_passed' => false,
+			'passwords_matched' => false,
+			'outcome' => 'captcha_failed',
+		));
 		$html     .= "<pre><br />The CAPTCHA was incorrect. Please try again.</pre>";
 		$hide_form = false;
 		return;
@@ -24,6 +31,13 @@ if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '1' ) ) {
 	else {
 		// CAPTCHA was correct. Do both new passwords match?
 		if( $pass_new == $pass_conf ) {
+			pendoTrackEvent( 'captcha_password_change_submitted', dvwaCurrentUser(), array(
+				'security_level' => dvwaSecurityLevelGet(),
+				'step' => 1,
+				'captcha_passed' => true,
+				'passwords_matched' => true,
+				'outcome' => 'proceed_to_step2',
+			));
 			// Show next stage for the user
 			$html .= "
 				<pre><br />You passed the CAPTCHA! Click the button to confirm your changes.<br /></pre>
@@ -36,6 +50,13 @@ if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '1' ) ) {
 		}
 		else {
 			// Both new passwords do not match.
+			pendoTrackEvent( 'captcha_password_change_submitted', dvwaCurrentUser(), array(
+				'security_level' => dvwaSecurityLevelGet(),
+				'step' => 1,
+				'captcha_passed' => true,
+				'passwords_matched' => false,
+				'outcome' => 'password_mismatch',
+			));
 			$html     .= "<pre>Both passwords must match.</pre>";
 			$hide_form = false;
 		}
@@ -61,10 +82,24 @@ if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '2' ) ) {
 		$result = mysqli_query($GLOBALS["___mysqli_ston"],  $insert ) or die( '<pre>' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );
 
 		// Feedback for the end user
+		pendoTrackEvent( 'captcha_password_change_submitted', dvwaCurrentUser(), array(
+			'security_level' => dvwaSecurityLevelGet(),
+			'step' => 2,
+			'captcha_passed' => true,
+			'passwords_matched' => true,
+			'outcome' => 'changed',
+		));
 		$html .= "<pre>Password Changed.</pre>";
 	}
 	else {
 		// Issue with the passwords matching
+		pendoTrackEvent( 'captcha_password_change_submitted', dvwaCurrentUser(), array(
+			'security_level' => dvwaSecurityLevelGet(),
+			'step' => 2,
+			'captcha_passed' => true,
+			'passwords_matched' => false,
+			'outcome' => 'password_mismatch',
+		));
 		$html .= "<pre>Passwords did not match.</pre>";
 		$hide_form = false;
 	}

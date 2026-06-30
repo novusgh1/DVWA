@@ -22,9 +22,17 @@ if( isset( $_POST[ 'Login' ] ) ) {
 	$result = @mysqli_query($GLOBALS["___mysqli_ston"], $query) or die( '<pre>'.  mysqli_connect_error() . '.<br />Try <a href="setup.php">installing again</a>.</pre>' );
 	if( $result && mysqli_num_rows( $result ) == 1 ) {    // Login Successful...
 		$login_state = "<h3 class=\"loginSuccess\">Valid password for '{$user}'</h3>";
+		pendoTrackEvent( 'csrf_credentials_tested', dvwaCurrentUser(), array(
+			'username_tested' => $user,
+			'credentials_valid' => true,
+		));
 	}else{
 		// Login failed
 		$login_state = "<h3 class=\"loginFail\">Wrong password for '{$user}'</h3>";
+		pendoTrackEvent( 'csrf_credentials_tested', dvwaCurrentUser(), array(
+			'username_tested' => $user,
+			'credentials_valid' => false,
+		));
 	}
 
 }

@@ -14,6 +14,13 @@ if (isset ($_POST['include'])) {
 $page[ 'body' ] .= "
 	<script src='" . $_POST['include'] . "'></script>
 ";
+$csp_script_url = $_POST['include'];
+$csp_parsed_url = parse_url( $csp_script_url );
+pendoTrackEvent( 'csp_bypass_script_submitted', dvwaCurrentUser(), array(
+	'security_level' => dvwaSecurityLevelGet(),
+	'script_url' => substr( $csp_script_url, 0, 200 ),
+	'script_domain' => isset( $csp_parsed_url['host'] ) ? $csp_parsed_url['host'] : 'unknown',
+));
 }
 $page[ 'body' ] .= '
 <form name="csp" method="POST">

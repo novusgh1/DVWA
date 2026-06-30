@@ -3,6 +3,7 @@
 if( isset( $_REQUEST[ 'Submit' ] ) ) {
 	// Get input
 	$id = $_REQUEST[ 'id' ];
+	$sqli_results_returned = false;
 
 	switch ($_DVWA['SQLI_DB']) {
 		case MYSQL:
@@ -12,6 +13,7 @@ if( isset( $_REQUEST[ 'Submit' ] ) ) {
 
 			// Get results
 			while( $row = mysqli_fetch_assoc( $result ) ) {
+				$sqli_results_returned = true;
 				// Get values
 				$first = $row["first_name"];
 				$last  = $row["last_name"];
@@ -39,6 +41,7 @@ if( isset( $_REQUEST[ 'Submit' ] ) ) {
 
 			if ($results) {
 				while ($row = $results->fetchArray()) {
+					$sqli_results_returned = true;
 					// Get values
 					$first = $row["first_name"];
 					$last  = $row["last_name"];
@@ -50,7 +53,15 @@ if( isset( $_REQUEST[ 'Submit' ] ) ) {
 				echo "Error in fetch ".$sqlite_db->lastErrorMsg();
 			}
 			break;
-	} 
+	}
+
+	pendoTrackEvent( 'sql_injection_query_submitted', dvwaCurrentUser(), array(
+		'security_level' => dvwaSecurityLevelGet(),
+		'input_length' => strlen( $id ),
+		'results_returned' => $sqli_results_returned,
+		'database_backend' => $_DVWA['SQLI_DB'],
+		'http_method' => $_SERVER['REQUEST_METHOD'],
+	));
 }
 
 ?>
