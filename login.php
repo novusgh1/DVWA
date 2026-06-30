@@ -58,6 +58,8 @@ Header( 'Expires: Tue, 23 Jun 2009 12:00:00 GMT' );     // Date in the past
 // Anti-CSRF
 generateSessionToken();
 
+$pendoSnippet = dvwaPendoSnippet();
+
 echo "<!DOCTYPE html>
 
 <html lang=\"en-GB\">
@@ -69,6 +71,8 @@ echo "<!DOCTYPE html>
 		<title>Login :: Damn Vulnerable Web Application (DVWA)</title>
 
 		<link rel=\"stylesheet\" type=\"text/css\" href=\"" . DVWA_WEB_PAGE_TO_ROOT . "dvwa/css/login.css\" />
+
+		{$pendoSnippet}
 
 	</head>
 
