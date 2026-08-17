@@ -32,8 +32,15 @@ switch( dvwaSecurityLevelGet() ) {
 require_once DVWA_WEB_PAGE_TO_ROOT . "vulnerabilities/fi/source/{$vulnerabilityFile}";
 
 // if( count( $_GET ) )
-if( isset( $file ) )
+if( isset( $file ) ) {
+	pendoTrackEvent( 'file_inclusion_attempted', dvwaCurrentUser(), array(
+		'security_level' => dvwaSecurityLevelGet(),
+		'file_path' => substr( $file, 0, 200 ),
+		'is_remote_url' => (bool) preg_match( '/^https?:\/\//i', $file ),
+		'input_length' => strlen( $file ),
+	));
 	include( $file );
+}
 else {
 	header( 'Location:?page=include.php' );
 	exit;
