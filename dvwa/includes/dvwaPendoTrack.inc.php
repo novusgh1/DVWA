@@ -9,8 +9,8 @@
  */
 
 function pendoTrackEvent( $eventName, $visitorId = 'anonymous', $properties = array() ) {
-	$integrationKey = 'd81f5a8d-afce-48ee-b9e2-06b4e2ace171';
-	$endpoint = 'https://data.pendo.io/data/track';
+	$integrationKey = '6fa58766-d2b4-47c0-8d1c-b72602ed0915';
+	$endpoint = 'https://data.pendo-dev.pendo-dev.com/data/track';
 
 	$payload = array(
 		'type'       => 'track',

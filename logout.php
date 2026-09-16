@@ -10,6 +10,10 @@ if( !dvwaIsLoggedIn() ) {	// The user shouldn't even be on this page
 	dvwaRedirect( 'login.php' );
 }
 
+$logoutUser = dvwaCurrentUser();
+pendoTrackEvent( 'user_logged_out', $logoutUser, array(
+	'username' => $logoutUser,
+));
 dvwaLogout();
 dvwaMessagePush( "You have logged out" );
 dvwaRedirect( 'login.php' );
